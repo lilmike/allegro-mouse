@@ -1,4 +1,8 @@
-#include <allegro5\allegro5.h>
+//mouse.h
+//By Michael Taboada
+//Provided under the unlicense
+//see UNLICENSE for details
+#include <allegro5/allegro5.h>
 
 #pragma once
 class mouse

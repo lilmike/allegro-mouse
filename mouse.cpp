@@ -1,3 +1,7 @@
+//mouse.cpp
+//By Michael Taboada
+//Provided under the unlicense
+//see UNLICENSE for details
 #include "mouse.h"
 
 mouse::mouse(void)
@@ -24,7 +28,12 @@ mouse::~mouse(void)
 	al_destroy_event_queue(queue);
 }
 
-bool mouse::poll(ALLEGRO_EVENT& ev) {
+/**
+*This method is used to both update the mouse class and return events to your code.
+*Note that since more than one queue can be listening for mouse events, this method is probably not necessary to be called outside of this class.
+*@return whether there was an event in the queue.
+**/
+bool mouse::poll(ALLEGRO_EVENT& ev/**< [out] The event to be returned to your code. If there was no event in the queue this value is unspecified.**/) {
 	ALLEGRO_EVENT event;
 	if(!al_get_next_event(queue, &event)) {
 		ev = event;
@@ -67,18 +76,29 @@ bool mouse::poll(ALLEGRO_EVENT& ev) {
 	}
 }
 
-void mouse::catch_mouse(ALLEGRO_DISPLAY* disp, int mx, int my) {
+/**
+*Used to return the mouse to the window if it leaves it.
+*Mostly useful in audio games where blind people would not know if their mouse had left the window.
+**/
+void mouse::catch_mouse(ALLEGRO_DISPLAY* disp/**< [in] The display to keep the mouse in.**/, int mx/**< [in] The x coordinate to bring the mouse back to.**/, int my/**< [in] The y coordinate to return the mouse to.**/) {
 	display = disp;
 	mousex = mx;
 	mousey = my;
 }
 
+/**
+*Lets the mouse leave the window normally.
+**/
 void mouse::uncatch_mouse() {
 	display = NULL;
 	mousex = mousey = 0;
 }
 
-bool mouse::button_down(unsigned int button) {
+/**
+*Check if a button is down.
+*@return if the button in question is down.
+**/
+bool mouse::button_down(unsigned int button/**< [in] The button to check, as returned by allegro.**/) {
 	if(button > al_get_mouse_num_buttons() || button < 1) {
 		return false;
 	}
@@ -91,7 +111,12 @@ bool mouse::button_down(unsigned int button) {
 	}
 }
 
-bool mouse::button_pressed(unsigned int button) {
+/**
+*Check if a button is pressed.
+*Note that once a button is checked as pressed, it will not show as pressed until it has been released and re-pressed.
+*@return whether the button was pressed.
+**/
+bool mouse::button_pressed(unsigned int button/**< [in] The button to check, as returned by allegro.**/) {
 	if(button > al_get_mouse_num_buttons() || button < 1) {
 		return false;
 	}
@@ -106,6 +131,10 @@ bool mouse::button_pressed(unsigned int button) {
 	}
 }
 
+/**
+*Get the x coordinate of the mouse.
+*@return the x coordinate.
+**/
 int mouse::get_x() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -114,6 +143,10 @@ int mouse::get_x() {
 	return x;
 }
 
+/**
+*Get the y coordinate of the mouse.
+*@return the y coordinate.
+**/
 int mouse::get_y() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -122,6 +155,10 @@ int mouse::get_y() {
 	return y;
 }
 
+/**
+*Get the z coordinate of the mouse.
+*@return the z coordinate.
+**/
 int mouse::get_z() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -130,6 +167,10 @@ int mouse::get_z() {
 	return z;
 }
 
+/**
+*Get the w coordinate of the mouse.
+*@return the w coordinate.
+**/
 int mouse::get_w() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -138,6 +179,10 @@ int mouse::get_w() {
 	return w;
 }
 
+/**
+*Get the difference in the x coordinate from last time this method was called.
+*@return the difference.
+**/
 int mouse::get_dx() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -148,6 +193,10 @@ int mouse::get_dx() {
 	return val;
 }
 
+/**
+*Get the difference in the y coordinate from last time this method was called.
+*@return the difference.
+**/
 int mouse::get_dy() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -158,6 +207,10 @@ int mouse::get_dy() {
 	return val;
 }
 
+/**
+*Get the difference in the z coordinate from last time this method was called.
+*@return the difference.
+**/
 int mouse::get_dz() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -168,6 +221,10 @@ int mouse::get_dz() {
 	return val;
 }
 
+/**
+*Get the difference in the w coordinate from last time this method was called.
+*@return the difference.
+**/
 int mouse::get_dw() {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
@@ -178,7 +235,10 @@ int mouse::get_dw() {
 	return val;
 }
 
-void mouse::get_xy(int& mx, int& my) {
+/**
+*Gets the x and y coordinates.
+**/
+void mouse::get_xy(int& mx/**< [out] The variable to put the x coordinate into.**/, int& my/**< [out] The variable to put the y coordinate into.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
@@ -187,7 +247,10 @@ void mouse::get_xy(int& mx, int& my) {
 	my = y;
 }
 
-void mouse::get_zw(int& mz, int& mw) {
+/**
+*Get the z and w coordinates of the mouse.
+**/
+void mouse::get_zw(int& mz/**< [out] The variable to put the z coordinate in.**/, int& mw/**< [out] The variable to put the w coordinate in.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
@@ -196,7 +259,10 @@ void mouse::get_zw(int& mz, int& mw) {
 	mw = w;
 }
 
-void mouse::get_dx_dy(int& mdx, int& mdy) {
+/**
+*Get the difference between the x, and the y coordinates since this method was called.
+**/
+void mouse::get_dx_dy(int& mdx/**< [out] The difference in the x coordinate.**/, int& mdy/**< [out] The difference in the y.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
@@ -209,7 +275,10 @@ void mouse::get_dx_dy(int& mdx, int& mdy) {
 	mdy = val;
 }
 
-void mouse::get_dz_dw(int& mdz, int& mdw) {
+/**
+*Gets the difference between the z and w coordinates since this method was called last.
+**/
+void mouse::get_dz_dw(int& mdz/**< [out] The difference in the z coordinate.**/, int& mdw/**< [out] The difference in the w coordinate.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
@@ -222,7 +291,10 @@ void mouse::get_dz_dw(int& mdz, int& mdw) {
 	mdw = val;
 }
 
-void mouse::get_axes(int& mx, int& my, int& mz, int& mw) {
+/**
+*Get the x, y, z, and w coordinates.
+**/
+void mouse::get_axes(int& mx/**< [out] The x coordinate.**/, int& my/**< [out] The y coordinate.**/, int& mz/**< [out] The z coordinate.**/, int& mw/**< [out] The w coordinate.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
@@ -233,7 +305,10 @@ void mouse::get_axes(int& mx, int& my, int& mz, int& mw) {
 	mw = w;
 }
 
-void mouse::get_changes(int& mdx, int& mdy, int& mdz, int& mdw) {
+/**
+*Gets the difference in the x, y, z, and w coordinate since this method was called last.
+**/
+void mouse::get_changes(int& mdx/**< [out] The variable to put the change in the x coordinate.**/, int& mdy/**< [out] The y difference.**/, int& mdz/**< [out] The difference in the z coordinate.**/, int& mdw/**< [out] The difference in the w coordinate.**/) {
 	ALLEGRO_EVENT ev;
 	while(poll(ev)) {
 		al_rest(0.005);
